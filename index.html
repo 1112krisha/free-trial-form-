@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -135,6 +134,8 @@
       const description = document.getElementById('company_description').value;
       const expectations = document.getElementById('chatbot_expectations').value;
 
+      console.log("Submitting form with data:", { domain, tone, description, expectations });
+
       const { data, error } = await supabase.from('company_details').insert([
         {
           domain_name: domain,
@@ -144,14 +145,13 @@
         }
       ]);
 
-      console.log("📤 Insert Result:", { data, error });
-
       if (error) {
         alert('❌ Error: ' + error.message);
         console.error(error);
       } else {
         alert('✅ Form submitted successfully!');
-        window.location.href = '/trial-chatbot.html';
+        console.log("✅ Data inserted:", data);
+        window.location.reload();
       }
     });
   </script>
