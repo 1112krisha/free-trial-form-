@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Start Your Free Trial</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      background: #ffffff;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #3b82f6;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Start Your Free Trial</h1>
+
+    <form id="trial-form">
+      <label for="domain_name">Company Domain Name:</label>
+      <input type="text" id="domain_name" placeholder="e.g. entropy-ai.in" required />
+
+      <label for="tone">Tone of Chatbot:</label>
+      <select id="tone" onchange="toggleCustomTone()">
+        <option value="Formal">Formal</option>
+        <option value="Informal">Informal</option>
+        <option value="Professional">Professional</option>
+        <option value="Friendly">Friendly</option>
+        <option value="Casual">Casual</option>
+        <option value="Custom">Custom</option>
+      </select>
+
+      <input type="text" id="custom_tone_input" class="hidden" placeholder="Enter custom tone" />
+
+      <label for="company_description">Company Description:</label>
+      <input type="text" id="company_description" placeholder="What does your company do?" required />
+
+      <label for="chatbot_expectations">Expectations for Chatbot:</label>
+      <textarea id="chatbot_expectations" rows="4" placeholder="e.g. Customer support, FAQ answering, etc." required></textarea>
+
+      <button type="submit">🚀 Create My Free Trial</button>
+    </form>
+
+    <div class="footer">
+      Powered by <strong>Advait AI</strong>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://fvsiqiyqwjztvsndvxco.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2c2lxaXlxd2p6dHZzbmR2eGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNzUxNjAsImV4cCI6MjA2NzY1MTE2MH0.Os5-UQ0H0x71Btxdc4eEQnVpDxZUW-NE1_9kJBscaKk';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function toggleCustomTone() {
+      const tone = document.getElementById('tone').value;
+      const customInput = document.getElementById('custom_tone_input');
+      customInput.classList.toggle('hidden', tone !== 'Custom');
+    }
+
+    document.getElementById('trial-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const domain = document.getElementById('domain_name').value;
+      let tone = document.getElementById('tone').value;
+      if (tone === 'Custom') {
+        tone = document.getElementById('custom_tone_input').value.trim() || 'Custom';
+      }
+
+      const description = document.getElementById('company_description').value;
+      const expectations = document.getElementById('chatbot_expectations').value;
+
+      const { data, error } = await supabase.from('company_details').insert([
+        {
+          domain_name: domain,
+          tone: tone,
+          company_description: description,
+          chatbot_expectations: expectations
+        }
+      ]);
+
+      if (error) {
+        alert('❌ Error: ' + error.message);
+        console.error(error);
+      } else {
+        alert('✅ Form submitted successfully!');
+        window.location.href = '/trial-chatbot.html';
+      }
+    });
+  </script>
+</body>
+</html>
